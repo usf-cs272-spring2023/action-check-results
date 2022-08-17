@@ -34,6 +34,8 @@ async function findWorkflowRun(workflow_name) {
   }
 
   core.info(JSON.stringify(runs));
+  core.endGroup();
+
   throw new Error(`Unable to fetch workflow runs for ${workflow_name}.`);
 }
 
@@ -60,6 +62,8 @@ async function findArtifact(workflow_run, artifact_name) {
   }
 
   core.info(JSON.stringify(artifacts));
+  core.endGroup();
+
   throw new Error(`Unable to find ${artifact_name} for run ${workflow_run}.`);
 }
 
@@ -82,10 +86,10 @@ async function run() {
   }
   else {
     core.info('');
-    workflow_run = findWorkflowRun(workflow_name);
+    workflow_run = await findWorkflowRun(workflow_name);
   }
 
-  const artifact_id = findArtifact(workflow_run, artifact_name);
+  const artifact_id = await findArtifact(workflow_run, artifact_name);
 
   const output = {
     hello: 'world',
@@ -101,8 +105,6 @@ async function run() {
 try {
   run();
 } catch (error) {
-  core.endGroup();
-
   core.startGroup('Outputting payload...');
   console.log(JSON.stringify(github.context.payload));
   core.endGroup();
