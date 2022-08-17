@@ -1,0 +1,21 @@
+name: 'Check Results'
+description: 'Checks for (and returns) JSON results stored as a workflow artifact.'
+inputs:
+  artifact_name:
+    description: 'Name of artifact'
+    required: true
+  artifact_json:
+    description: 'Name of artifact JSON file'
+    required: true
+  workflow_name:
+    description: 'Name of workflow'
+    required: true
+  workflow_run:
+    description: 'Run ID of workflow'
+    required: false
+outputs:
+  json_string:
+    description: 'JSON file encoded as a string'
+runs:
+  using: 'node16'
+  main: 'index.js'

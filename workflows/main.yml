@@ -1,0 +1,50 @@
+name: 'Check Results'
+
+on:
+  workflow_dispatch:
+    inputs:
+      artifact_name:
+        description: 'Name of artifact'
+        default: 'check-deadline-results'
+        required: true
+      artifact_json:
+        description: 'Name of artifact JSON file'
+        default: 'check-deadline-results.json'
+        required: true
+      workflow_name:
+        description: 'Name of workflow'
+        default: 'classroom.yml'
+        required: true
+      workflow_run:
+        description: 'Run ID of workflow'
+        required: false
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+    name: Check Results
+ 
+    steps:
+      - name: Check Results
+        id: check-results
+        uses: usf-cs272-fall2022/action-check-results@main
+        with:
+          artifact_name: "${{ inputs.artifact_name }}"
+          artifact_json: "${{ inputs.artifact_json }}"
+          workflow_name: "${{ inputs.workflow_name }}"
+          workflow_run:  "${{ inputs.workflow_run }}"
+
+      - name: Display Results
+        id: display-results
+        uses: actions/github-script@v6
+        env:
+          RESULTS_JSON: "{{ steps.check-results.outputs.json_string }}"
+        with:
+          script: |
+            const output = JSON.parse(process.env.RESULTS_JSON);
+
+            for (const property in output) {
+              core.info(property, output[property]);
+            }
+
+            return output;
