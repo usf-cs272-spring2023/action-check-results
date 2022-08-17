@@ -5,7 +5,6 @@ const fs = require('fs');
 const https = require('https');
 
 const owner = github.context.payload.organization.login;
-const actor = github.context.payload.issue.user.login;
 const repo  = github.context.payload.repository.name;
 
 async function findWorkflowRun(workflow_name) {
