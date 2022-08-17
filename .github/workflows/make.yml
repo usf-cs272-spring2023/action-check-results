@@ -1,0 +1,32 @@
+name: 'Make Artifact'
+
+on:
+  workflow_dispatch:
+    inputs:
+      artifact_name:
+        description: 'Name of artifact'
+        default: 'check-deadline-results'
+        required: true
+      artifact_json:
+        description: 'Name of artifact JSON file'
+        default: 'check-deadline-results.json'
+        required: true
+
+jobs:
+  make:
+    runs-on: ubuntu-latest
+    name: Make Artifact
+ 
+    steps:
+      - name: Make Artifact
+        id: make-artifact
+        run: |
+          echo "{hello: 'world', answer: [42], nested: {found: true}}" > ${{ inputs.artifact_json }}
+          cat ${{ inputs.artifact_json }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        id: upload-artifact
+        with:
+          name: "${{ inputs.artifact_name }}"
+          path: "${{ inputs.artifact_json }}"

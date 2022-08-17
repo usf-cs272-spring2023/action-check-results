@@ -20,7 +20,7 @@ on:
         required: false
 
 jobs:
-  grade:
+  results:
     runs-on: ubuntu-latest
     name: Check Results
  
