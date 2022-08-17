@@ -1,0 +1,26 @@
+{
+  "name": "action-check-results",
+  "version": "1.0.0",
+  "description": "GitHub Action to fetch JSON results saved as an artifact",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/usf-cs272-fall2022/action-check-results.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/usf-cs272-fall2022/action-check-results/issues"
+  },
+  "homepage": "https://github.com/usf-cs272-fall2022/action-check-results#readme",
+  "dependencies": {
+    "@actions/core": "^1.9.1",
+    "@actions/github": "^5.0.3",
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0"
+  }
+}
