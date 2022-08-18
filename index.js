@@ -86,20 +86,20 @@ async function run() {
     core.info(`Artifact JSON: ${artifact_json}`);
     core.info(`Workflow Name: ${workflow_name}`);
 
-    // use provided workflow run or find the latest one
-    let workflow_run = core.getInput('workflow_run', { required: false });
+    // // use provided workflow run or find the latest one
+    // let workflow_run = core.getInput('workflow_run', { required: false });
     
-    if (workflow_run) {
-      workflow_run = parseInt(workflow_run);
-      core.info(`Workflow Run:  ${workflow_run}`);
-      core.info('');
-    }
-    else {
-      core.info('');
-      workflow_run = await findWorkflowRun(workflow_name);
-    }
+    // if (workflow_run) {
+    //   workflow_run = parseInt(workflow_run);
+    //   core.info(`Workflow Run:  ${workflow_run}`);
+    //   core.info('');
+    // }
+    // else {
+    //   core.info('');
+    //   workflow_run = await findWorkflowRun(workflow_name);
+    // }
 
-    const artifact_id = await findArtifact(workflow_run, artifact_name);
+    // const artifact_id = await findArtifact(workflow_run, artifact_name);
 
     const output = {
       hello: 'world',
