@@ -21,7 +21,7 @@ jobs:
       - name: Make Artifact
         id: make-artifact
         run: |
-          echo "{hello: 'world', answer: [42], nested: {found: true}}" > ${{ inputs.artifact_json }}
+          echo '{"hello": "world", "answer": [42], "nested": {"found": true}}' > ${{ inputs.artifact_json }}
           cat ${{ inputs.artifact_json }}
 
       - name: Upload Artifact
