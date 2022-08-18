@@ -13,6 +13,9 @@ inputs:
   workflow_run:
     description: 'Run ID of workflow'
     required: false
+  token:
+    description: 'Authentication token to access repositories'
+    required: true
 outputs:
   json_string:
     description: 'JSON file encoded as a string'
