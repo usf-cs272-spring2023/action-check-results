@@ -1,8 +1,9 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const octokit = github.getOctokit(core.getInput('token'));
 
 const fetch = require('node-fetch');
-const octokit = github.getOctokit(core.getInput('token'));
+const AdmZip = require("adm-zip");
 
 async function findWorkflowRun(workflow_name) {
   core.startGroup(`Fetching latest runs for ${workflow_name}...`);
@@ -79,8 +80,10 @@ async function downloadArtifact(artifact_id) {
     core.info(`Using ${downloader.url} for download.`);
     const response = await fetch(downloader.url);
 
-    core.info(JSON.stringify(response));
+    const zip = new AdmZip(Buffer.from(response.body));
 
+    core.info(JSON.stringify(response));
+    
   }
 
   core.info(JSON.stringify(downloader));
