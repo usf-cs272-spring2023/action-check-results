@@ -4,48 +4,38 @@ const github = require('@actions/github');
 const fs = require('fs');
 const https = require('https');
 
-
+const octokit = github.getOctokit(core.getInput('token'));
 
 async function findWorkflowRun(workflow_name) {
   core.startGroup(`Fetching latest runs for ${workflow_name}...`);
 
-  // const params = {
-  //   owner: github.context.repo.owner,
-  //   repo: github.context.repo.repo,
-  //   workflow_id: `${workflow_name}`,
-  //   status: 'completed',
-  //   per_page: 5
-  // }
+  const runs = await octokit.rest.actions.listWorkflowRuns({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    workflow_id: `${workflow_name}`,
+    status: 'completed',
+    per_page: 5
+  });
 
-  // core.info(JSON.stringify(params));
+  if (runs.status === 200 && runs.data.total_count >= 0) {
+    core.info(`Found ${runs.data.total_count} workflow runs.`);
 
-//   const testing = octokit.rest.actions.listWorkflowRuns;
+    const first = runs.data.workflow_runs[0];
+    core.info(`First run ${first.id} started at ${first.run_started_at}.`);
 
-//   core.info('hello');
+    const last = runs.data.workflow_runs[runs.data.workflow_runs.length - 1];
+    core.info(`Last run ${last.id} started at ${last.run_started_at}.`);
 
-//   const runs = await octokit.rest.actions.listWorkflowRuns(params);
+    core.endGroup();
+    core.info('');
 
-//   core.info('world');
+    return parseInt(first.id);
+  }
 
-//   if (runs.status === 200 && runs.data.total_count >= 0) {
-//     core.info(`Found ${runs.data.total_count} workflow runs.`);
-
-//     const first = runs.data.workflow_runs[0];
-//     core.info(`First run ${first.id} started at ${first.run_started_at}.`);
-
-//     const last = runs.data.workflow_runs[runs.data.workflow_runs.length - 1];
-//     core.info(`Last run ${last.id} started at ${last.run_started_at}.`);
-
-//     core.endGroup();
-//     core.info('');
-
-//     return parseInt(first.id);
-//   }
-
-//   core.info(JSON.stringify(runs));
+  core.info(JSON.stringify(runs));
   core.endGroup();
 
-//   throw new Error(`Unable to fetch workflow runs for ${workflow_name}.`);
+  throw new Error(`Unable to fetch workflow runs for ${workflow_name}.`);
 }
 
 // async function findArtifact(workflow_run, artifact_name) {
@@ -78,8 +68,6 @@ async function findWorkflowRun(workflow_name) {
 
 async function run() {
   try {
-    const octokit = github.getOctokit(core.getInput('token'));
-
     const artifact_name = core.getInput('artifact_name', { required: true });
     const artifact_json = core.getInput('artifact_json', { required: true });
     const workflow_name = core.getInput('workflow_name', { required: true });
