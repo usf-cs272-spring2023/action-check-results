@@ -45,7 +45,7 @@ jobs:
             const output = JSON.parse(process.env.RESULTS_JSON);
 
             for (const property in output) {
-              core.info(property, output[property]);
+              core.info(`${property}: ${JSON.stringify(output[property])}`);
             }
 
             return output;
