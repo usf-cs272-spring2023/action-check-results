@@ -20,6 +20,8 @@ async function findWorkflowRun(workflow_name) {
     per_page: 5
   });
 
+  core.info('hello');
+
   if (runs.status === 200 && runs.data.total_count >= 0) {
     core.info(`Found ${runs.data.total_count} workflow runs.`);
 
