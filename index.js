@@ -21,10 +21,10 @@ async function findWorkflowRun(workflow_name) {
     core.info(`Found ${runs.data.total_count} workflow runs.`);
 
     const first = runs.data.workflow_runs[0];
-    core.info(`First run ${first.id} started at ${first.run_started_at}.`);
+    core.info(`Run ${first.id} started at ${first.run_started_at}.`);
 
     const last = runs.data.workflow_runs[runs.data.workflow_runs.length - 1];
-    core.info(`Last run ${last.id} started at ${last.run_started_at}.`);
+    core.info(`Run ${last.id} started at ${last.run_started_at}.`);
 
     core.endGroup();
     core.info('');
@@ -38,33 +38,33 @@ async function findWorkflowRun(workflow_name) {
   throw new Error(`Unable to fetch workflow runs for ${workflow_name}.`);
 }
 
-// async function findArtifact(workflow_run, artifact_name) {
-//   core.group(`Fetching artifacts for run ${workflow_run}...`);
+async function findArtifact(workflow_run, artifact_name) {
+  core.group(`Fetching artifacts for run ${workflow_run}...`);
 
-//   const artifacts = await octokit.rest.actions.listWorkflowRunArtifacts({
-//     owner: github.context.repo.owner,
-//     repo: github.context.repo.repo,
-//     run_id: workflow_run
-//   });
+  const artifacts = await octokit.rest.actions.listWorkflowRunArtifacts({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    run_id: workflow_run
+  });
 
-//   if (artifacts.status === 200 && artifacts.data.total_count > 0) {
-//     core.info(`Found ${artifacts.data.total_count} artifacts.`);
-//     const found = artifacts.data.artifacts.find(r => artifact_name === r.name);
+  if (artifacts.status === 200 && artifacts.data.total_count > 0) {
+    core.info(`Found ${artifacts.data.total_count} artifacts.`);
+    const found = artifacts.data.artifacts.find(r => artifact_name === r.name);
 
-//     if (found !== undefined) {
-//       core.info(`Found artifact ${found.id} named ${found.name}.`);
-//       core.endGroup();
-//       core.info('');
+    if (found !== undefined) {
+      core.info(`Found artifact ${found.id} named ${found.name}.`);
+      core.endGroup();
+      core.info('');
 
-//       return parseInt(found.id);
-//     }
-//   }
+      return parseInt(found.id);
+    }
+  }
 
-//   core.info(JSON.stringify(artifacts));
-//   core.endGroup();
+  core.info(JSON.stringify(artifacts));
+  core.endGroup();
 
-//   throw new Error(`Unable to find ${artifact_name} for run ${workflow_run}.`);
-// }
+  throw new Error(`Unable to find ${artifact_name} for run ${workflow_run}.`);
+}
 
 async function run() {
   try {
@@ -89,7 +89,7 @@ async function run() {
       workflow_run = await findWorkflowRun(workflow_name);
     }
 
-    // const artifact_id = await findArtifact(workflow_run, artifact_name);
+    const artifact_id = await findArtifact(workflow_run, artifact_name);
 
     const output = {
       hello: 'world',
