@@ -78,9 +78,9 @@ async function downloadArtifact(artifact_id) {
 
   if (downloader.status === 200) {
     core.info(`Using ${downloader.url} for download.`);
-    const response = await fetch(downloader.url);
+    // const response = await fetch(downloader.url);
 
-    const zip = new AdmZip(Buffer.from(response.body));
+    const zip = new AdmZip(Buffer.from(downloader.data));
 
     core.info(JSON.stringify(response));
     
