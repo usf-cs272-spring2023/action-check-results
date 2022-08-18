@@ -1,9 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-const fs = require('fs');
-const https = require('https');
-
+import fetch from 'node-fetch';
 const octokit = github.getOctokit(core.getInput('token'));
 
 async function findWorkflowRun(workflow_name) {
@@ -25,14 +23,14 @@ async function findWorkflowRun(workflow_name) {
 
     const last = runs.data.workflow_runs[runs.data.workflow_runs.length - 1];
     core.info(`Run ${last.id} started at ${last.run_started_at}.`);
-
-    core.endGroup();
     core.info('');
+    core.endGroup();
 
     return parseInt(first.id);
   }
 
   core.info(JSON.stringify(runs));
+  core.info('');
   core.endGroup();
 
   throw new Error(`Unable to fetch workflow runs for ${workflow_name}.`);
@@ -53,17 +51,39 @@ async function findArtifact(workflow_run, artifact_name) {
 
     if (found !== undefined) {
       core.info(`Found artifact ${found.id} named ${found.name}.`);
-      core.endGroup();
       core.info('');
+      core.endGroup();
 
       return parseInt(found.id);
     }
   }
 
   core.info(JSON.stringify(artifacts));
+  core.info('');
   core.endGroup();
 
   throw new Error(`Unable to find ${artifact_name} for run ${workflow_run}.`);
+}
+
+async function downloadArtifact(artifact_id) {
+  core.startGroup(`Downloading artifact id ${artifact_id}...`);
+
+  const downloader = await octokit.rest.actions.downloadArtifact({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    artifact_id: artifact_id,
+    archive_format: 'zip'
+  });
+
+  if (downloader.status === 200) {
+    core.info(`Using ${downloader.url} for download.`);
+  }
+
+  core.info(JSON.stringify(downloader));
+  core.info('');
+  core.endGroup();
+
+  throw new Error(`Unable to download ${artifact_id}.`);
 }
 
 async function run() {
@@ -90,6 +110,7 @@ async function run() {
     }
 
     const artifact_id = await findArtifact(workflow_run, artifact_name);
+    const result = await downloadArtifact(artifact_id);
 
     const output = {
       hello: 'world',
