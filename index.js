@@ -81,8 +81,13 @@ async function downloadArtifact(artifact_id) {
     // const response = await fetch(downloader.url);
 
     const zip = new AdmZip(Buffer.from(downloader.data));
+    var entries = zip.getEntries();
 
-    core.info(JSON.stringify(response));
+    entries.forEach(function(entry) {
+	    core.info(entry.toString());
+    });
+
+    // core.info(JSON.stringify(response));
     
   }
 
