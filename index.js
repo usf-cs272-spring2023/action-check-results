@@ -39,7 +39,7 @@ async function findWorkflowRun(workflow_name) {
 }
 
 async function findArtifact(workflow_run, artifact_name) {
-  core.group(`Fetching artifacts for run ${workflow_run}...`);
+  core.startGroup(`Fetching artifacts for run ${workflow_run}...`);
 
   const artifacts = await octokit.rest.actions.listWorkflowRunArtifacts({
     owner: github.context.repo.owner,
