@@ -39,7 +39,7 @@ jobs:
         id: display-results
         uses: actions/github-script@v6
         env:
-          RESULTS_JSON: "{{ steps.check-results.outputs.json_string }}"
+          RESULTS_JSON: "${{ steps.check-results.outputs.json_string }}"
         with:
           script: |
             const output = JSON.parse(process.env.RESULTS_JSON);
