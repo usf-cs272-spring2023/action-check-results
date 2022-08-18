@@ -4,10 +4,7 @@ const github = require('@actions/github');
 const fs = require('fs');
 const https = require('https');
 
-const token = core.getInput('token');
-const octokit = github.getOctokit(token);
-const owner = github.context.payload.organization.login;
-const repo  = github.context.payload.repository.name;
+const octokit = github.getOctokit(core.getInput('token'));
 
 async function findWorkflowRun(workflow_name) {
   core.group(`Fetching latest runs for ${workflow_name}...`);
@@ -22,13 +19,13 @@ async function findWorkflowRun(workflow_name) {
 
   core.info(JSON.stringify(params));
 
-  const testing = octokit.rest.actions;
+  const testing = octokit.rest.actions.listWorkflowRuns;
 
   core.info('hello');
 
   const runs = await octokit.rest.actions.listWorkflowRuns(params);
 
-  
+  core.info('world');
 
   if (runs.status === 200 && runs.data.total_count >= 0) {
     core.info(`Found ${runs.data.total_count} workflow runs.`);
@@ -55,8 +52,8 @@ async function findArtifact(workflow_run, artifact_name) {
   core.group(`Fetching artifacts for run ${workflow_run}...`);
 
   const artifacts = await octokit.rest.actions.listWorkflowRunArtifacts({
-    owner: owner,
-    repo: repo,
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
     run_id: workflow_run
   });
 
