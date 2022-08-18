@@ -13,8 +13,8 @@ async function findWorkflowRun(workflow_name) {
   core.group(`Fetching latest runs for ${workflow_name}...`);
 
   const runs = await octokit.rest.actions.listWorkflowRuns({
-    owner: owner,
-    repo: repo,
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
     workflow_id: `${workflow_name}`,
     status: 'completed',
     per_page: 5
