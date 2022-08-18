@@ -99,7 +99,7 @@ async function run() {
       workflow_run = await findWorkflowRun(workflow_name);
     }
 
-    const artifact_id = await findArtifact(workflow_run, artifact_name);
+    // const artifact_id = await findArtifact(workflow_run, artifact_name);
 
     const output = {
       hello: 'world',
