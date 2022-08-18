@@ -68,50 +68,51 @@ async function findArtifact(workflow_run, artifact_name) {
 }
 
 async function run() {
-  const artifact_name = core.getInput('artifact_name', { required: true });
-  const artifact_json = core.getInput('artifact_json', { required: true });
-  const workflow_name = core.getInput('workflow_name', { required: true });
+  try {
+    const artifact_name = core.getInput('artifact_name', { required: true });
+    const artifact_json = core.getInput('artifact_json', { required: true });
+    const workflow_name = core.getInput('workflow_name', { required: true });
 
-  core.info(`Artifact Name: ${artifact_name}`);
-  core.info(`Artifact JSON: ${artifact_json}`);
-  core.info(`Workflow Name: ${workflow_name}`);
+    core.info(`Artifact Name: ${artifact_name}`);
+    core.info(`Artifact JSON: ${artifact_json}`);
+    core.info(`Workflow Name: ${workflow_name}`);
 
-  // use provided workflow run or find the latest one
-  let workflow_run = core.getInput('workflow_run', { required: false });
-  
-  if (workflow_run) {
-    workflow_run = parseInt(workflow_run);
-    core.info(`Workflow Run:  ${workflow_run}`);
-    core.info('');
-  }
-  else {
-    core.info('');
-    workflow_run = await findWorkflowRun(workflow_name);
-  }
-
-  const artifact_id = await findArtifact(workflow_run, artifact_name);
-
-  const output = {
-    hello: 'world',
-    answer: 42,
-    nested: {
-      hello: 'world'
+    // use provided workflow run or find the latest one
+    let workflow_run = core.getInput('workflow_run', { required: false });
+    
+    if (workflow_run) {
+      workflow_run = parseInt(workflow_run);
+      core.info(`Workflow Run:  ${workflow_run}`);
+      core.info('');
     }
-  };
+    else {
+      core.info('');
+      workflow_run = await findWorkflowRun(workflow_name);
+    }
 
-  core.setOutput('json_string', JSON.stringify(output));
+    const artifact_id = await findArtifact(workflow_run, artifact_name);
+
+    const output = {
+      hello: 'world',
+      answer: 42,
+      nested: {
+        hello: 'world'
+      }
+    };
+
+    core.setOutput('json_string', JSON.stringify(output));
+  }
+  catch (error) {
+    core.startGroup('Outputting payload...');
+    console.log(JSON.stringify(github.context.payload));
+    core.endGroup();
+  
+    core.startGroup('Outputting context...');
+    console.log(JSON.stringify(github.context));
+    core.endGroup();
+  
+    core.setFailed(error.message);
+  }
 }
 
-try {
-  run();
-} catch (error) {
-  core.startGroup('Outputting payload...');
-  console.log(JSON.stringify(github.context.payload));
-  core.endGroup();
-
-  core.startGroup('Outputting context...');
-  console.log(JSON.stringify(github.context));
-  core.endGroup();
-
-  core.setFailed(error.message);
-}
+run();
