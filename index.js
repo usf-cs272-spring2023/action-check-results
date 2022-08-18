@@ -4,6 +4,8 @@ const github = require('@actions/github');
 const fs = require('fs');
 const https = require('https');
 
+const token = core.getInput('token');
+const octokit = github.getOctokit(token);
 const owner = github.context.payload.organization.login;
 const repo  = github.context.payload.repository.name;
 

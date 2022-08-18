@@ -33,7 +33,8 @@ jobs:
           artifact_json: "${{ inputs.artifact_json }}"
           workflow_name: "${{ inputs.workflow_name }}"
           workflow_run:  "${{ inputs.workflow_run }}"
-
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          
       - name: Display Results
         id: display-results
         uses: actions/github-script@v6
