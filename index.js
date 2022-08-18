@@ -77,6 +77,10 @@ async function downloadArtifact(artifact_id) {
 
   if (downloader.status === 200) {
     core.info(`Using ${downloader.url} for download.`);
+    const response = await fetch(downloader.url);
+
+    core.info(JSON.stringify(response));
+
   }
 
   core.info(JSON.stringify(downloader));
