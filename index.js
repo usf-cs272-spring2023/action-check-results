@@ -15,7 +15,7 @@ async function findWorkflowRun(workflow_name) {
   const runs = await octokit.rest.actions.listWorkflowRuns({
     owner: owner,
     repo: repo,
-    workflow_id: workflow_name,
+    workflow_id: `${workflow_name}`,
     status: 'completed',
     per_page: 5
   });
