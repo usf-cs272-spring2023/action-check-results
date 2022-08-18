@@ -22,9 +22,13 @@ async function findWorkflowRun(workflow_name) {
 
   core.info(JSON.stringify(params));
 
-  const runs = await octokit.rest.actions.listWorkflowRuns(params);
+  const testing = octokit.rest.actions;
 
   core.info('hello');
+
+  const runs = await octokit.rest.actions.listWorkflowRuns(params);
+
+  
 
   if (runs.status === 200 && runs.data.total_count >= 0) {
     core.info(`Found ${runs.data.total_count} workflow runs.`);
