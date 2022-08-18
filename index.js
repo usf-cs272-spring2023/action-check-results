@@ -4,20 +4,20 @@ const github = require('@actions/github');
 const fs = require('fs');
 const https = require('https');
 
-const octokit = github.getOctokit(core.getInput('token'));
 
-async function findWorkflowRun(workflow_name) {
-  core.group(`Fetching latest runs for ${workflow_name}...`);
 
-  const params = {
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    workflow_id: `${workflow_name}`,
-    status: 'completed',
-    per_page: 5
-  }
+// async function findWorkflowRun(workflow_name) {
+  // core.group(`Fetching latest runs for ${workflow_name}...`);
 
-  core.info(JSON.stringify(params));
+  // const params = {
+  //   owner: github.context.repo.owner,
+  //   repo: github.context.repo.repo,
+  //   workflow_id: `${workflow_name}`,
+  //   status: 'completed',
+  //   per_page: 5
+  // }
+
+  // core.info(JSON.stringify(params));
 
 //   const testing = octokit.rest.actions.listWorkflowRuns;
 
@@ -43,10 +43,10 @@ async function findWorkflowRun(workflow_name) {
 //   }
 
 //   core.info(JSON.stringify(runs));
-  core.endGroup();
+  // core.endGroup();
 
 //   throw new Error(`Unable to fetch workflow runs for ${workflow_name}.`);
-}
+// }
 
 // async function findArtifact(workflow_run, artifact_name) {
 //   core.group(`Fetching artifacts for run ${workflow_run}...`);
@@ -78,6 +78,8 @@ async function findWorkflowRun(workflow_name) {
 
 async function run() {
   try {
+    const octokit = github.getOctokit(core.getInput('token'));
+
     const artifact_name = core.getInput('artifact_name', { required: true });
     const artifact_json = core.getInput('artifact_json', { required: true });
     const workflow_name = core.getInput('workflow_name', { required: true });
@@ -96,7 +98,18 @@ async function run() {
     }
     else {
       core.info('');
-      workflow_run = await findWorkflowRun(workflow_name);
+      core.group(`Fetching latest runs for ${workflow_name}...`);
+
+      const params = {
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo,
+        workflow_id: `${workflow_name}`,
+        status: 'completed',
+        per_page: 5
+      }
+
+      core.info(JSON.stringify(params));
+      core.endGroup();
     }
 
     // const artifact_id = await findArtifact(workflow_run, artifact_name);
