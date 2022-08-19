@@ -88,6 +88,8 @@ async function downloadArtifact(artifact_id, artifact_json) {
 
     if (found !== undefined) {
       core.info(`Found ${found.name} in archive.`);
+      core.endGroup();
+      core.info('');
 
       const data = zip.readAsText(found);
       const parsed = JSON.parse(data);
