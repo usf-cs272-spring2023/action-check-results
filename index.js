@@ -137,11 +137,14 @@ async function run() {
     const parsed = await downloadArtifact(artifact_id, artifact_json);
 
     // set output based on downloaded json
+    core.startGroup('Setting output...');
     core.setOutput('json_string', JSON.stringify(parsed));
 
     for (property in parsed) {
+      core.info(`${property}: ${JSON.stringify(parsed[property])}`);
       core.setOutput(property, JSON.stringify(parsed[property]));
     }
+    core.endGroup();
   }
   catch (error) {
     core.startGroup('Outputting payload...');
