@@ -81,13 +81,23 @@ async function downloadArtifact(artifact_id, artifact_json) {
 
     // https://github.com/bettermarks/action-artifact-download
     const zip = new AdmZip(Buffer.from(downloader.data));
-    core.info(`Found ${zip.getEntries().length} entries in zip file.`);
+    const entries = zip.getEntries();
+    core.info(`Found ${entries.length} entries in zip file.`);
 
-    const entry = zip.getEntry(artifact_json);
-    core.info(entry.toString());
+    const found = entries.find(r => artifact_json == r.name);
 
-    // core.info(JSON.stringify(response));
-    
+    if (found !== undefined) {
+      core.info(`Found ${found.name} in archive.`);
+
+      const data = zip.readAsText(found);
+      const parsed = JSON.parse(data);
+
+      core.info(`Parsed: ${JSON.stringify(parsed)}`);
+      return parsed;
+    }
+    else {
+      core.info(`Entries: ${entries.map(r => r.entryName())}`);
+    }
   }
 
   core.info(JSON.stringify(downloader));
@@ -121,7 +131,7 @@ async function run() {
     }
 
     const artifact_id = await findArtifact(workflow_run, artifact_name);
-    const result = await downloadArtifact(artifact_id);
+    const parsed = await downloadArtifact(artifact_id);
 
     const output = {
       hello: 'world',
