@@ -96,7 +96,7 @@ async function downloadArtifact(artifact_id, artifact_json) {
       return parsed;
     }
     else {
-      core.info(`Entries: ${entries.map(r => r.entryName())}`);
+      core.info(`Entries: ${entries.map(r => r.entryName)}`);
     }
   }
 
@@ -131,7 +131,7 @@ async function run() {
     }
 
     const artifact_id = await findArtifact(workflow_run, artifact_name);
-    const parsed = await downloadArtifact(artifact_id);
+    const parsed = await downloadArtifact(artifact_id, artifact_json);
 
     const output = {
       hello: 'world',
