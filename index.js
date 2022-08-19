@@ -130,18 +130,16 @@ async function run() {
       workflow_run = await findWorkflowRun(workflow_name);
     }
 
+    // download artifact zip, extract file, and parse as JSON
     const artifact_id = await findArtifact(workflow_run, artifact_name);
     const parsed = await downloadArtifact(artifact_id, artifact_json);
 
-    const output = {
-      hello: 'world',
-      answer: 42,
-      nested: {
-        hello: 'world'
-      }
-    };
+    // set output based on downloaded json
+    core.setOutput('json_string', JSON.stringify(parsed));
 
-    core.setOutput('json_string', JSON.stringify(output));
+    for (property in parsed) {
+      core.setOutput(property, JSON.stringify(parsed[property]));
+    }
   }
   catch (error) {
     core.startGroup('Outputting payload...');
