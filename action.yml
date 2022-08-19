@@ -1,6 +1,10 @@
 name: 'Check Results'
 description: 'Checks for (and returns) JSON results stored as a workflow artifact.'
+
 inputs:
+  access_token:
+    description: 'Authentication token to access repositories'
+    required: true
   artifact_name:
     description: 'Name of artifact'
     required: true
@@ -13,12 +17,11 @@ inputs:
   workflow_run:
     description: 'Run ID of workflow'
     required: false
-  token:
-    description: 'Authentication token to access repositories'
-    required: true
+
 outputs:
   json_string:
     description: 'JSON file encoded as a string'
+
 runs:
   using: 'node16'
   main: 'index.js'

@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const octokit = github.getOctokit(core.getInput('token'));
+const octokit = github.getOctokit(core.getInput('access_token'));
 
 const fetch = require('node-fetch');
 const AdmZip = require("adm-zip");
