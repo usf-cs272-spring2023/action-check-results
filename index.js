@@ -78,10 +78,11 @@ async function downloadArtifact(artifact_id) {
 
   if (downloader.status === 200) {
     core.info(`Using ${downloader.url} for download.`);
-    // const response = await fetch(downloader.url);
 
+    // https://github.com/bettermarks/action-artifact-download
     const zip = new AdmZip(Buffer.from(downloader.data));
-    var entries = zip.getEntries();
+    const entries = zip.getEntries();
+    core.info(`Found ${entries.length} entries in zip file.`);
 
     entries.forEach(function(entry) {
 	    core.info(entry.toString());
