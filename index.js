@@ -66,7 +66,7 @@ async function findArtifact(workflow_run, artifact_name) {
   throw new Error(`Unable to find ${artifact_name} for run ${workflow_run}.`);
 }
 
-async function downloadArtifact(artifact_id) {
+async function downloadArtifact(artifact_id, artifact_json) {
   core.startGroup(`Downloading artifact id ${artifact_id}...`);
 
   const downloader = await octokit.rest.actions.downloadArtifact({
@@ -81,12 +81,10 @@ async function downloadArtifact(artifact_id) {
 
     // https://github.com/bettermarks/action-artifact-download
     const zip = new AdmZip(Buffer.from(downloader.data));
-    const entries = zip.getEntries();
-    core.info(`Found ${entries.length} entries in zip file.`);
+    core.info(`Found ${zip.getEntries().length} entries in zip file.`);
 
-    entries.forEach(function(entry) {
-	    core.info(entry.toString());
-    });
+    const entry = zip.getEntry(artifact_json);
+    core.info(entry.toString());
 
     // core.info(JSON.stringify(response));
     
