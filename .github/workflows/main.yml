@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Check Results
         id: check-results
-        uses: usf-cs272-fall2022/action-check-results@main
+        uses: usf-cs272-spring2023/action-check-results@main
         with:
           artifact_name: "${{ inputs.artifact_name }}"
           artifact_json: "${{ inputs.artifact_json }}"
